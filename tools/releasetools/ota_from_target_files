@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 #
 # Copyright (C) 2008 The Android Open Source Project
+# Copyright (C) 2011-2013 The XPerience Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -414,18 +415,53 @@ def WriteFullOTAPackage(input_zip, output_zip):
 
   if OPTIONS.wipe_user_data:
     script.FormatPartition("/data")
+    
+
+  script.Print("##########################################");
+  script.Print("#                                        #");
+  script.Print("#                                        #");
+  script.Print("# /'\_/`\ /\ \ /\ \                      #");                                     
+  script.Print("#/\      \\ `\`\/'/'                     #");
+  script.Print("#\ \ \__\ \`\/ > <                       #");
+  script.Print("# \ \ \_/\ \  \/'/\`\                    #");
+  script.Print("#  \ \_\\ \_\ /\_\\ \_\                  #");
+  script.Print("#   \/_/ \/_/ \/_/ \/_/                  #");
+  script.Print("#    ____     __    ___     ___   _ __   #");
+  script.Print("#   /',__\  /'__`\/' _ `\  / __`\/\`'__\ #");
+  script.Print("#  /\__, `\/\  __//\ \/\ \/\ \L\ \ \ \/  #");
+  script.Print("#  \/\____/\ \____\ \_\ \_\ \____/\ \_\  #");
+  script.Print("#   \/___/  \/____/\/_/\/_/\/___/  \/_/  #");
+  script.Print("#  _____      __     __                  #");
+  script.Print("# /\ '__`\  /'__`\  /\ \__               #");
+  script.Print("# \ \ \L\ \/\ \L\.\_\ \ ,_\   ___        #");
+  script.Print("#  \ \ ,__/\ \__/.\_\\ \ \/  / __`\      #");
+  script.Print("#   \ \ \/  \/__/\/_/ \ \ \_/\ \L\ \     #");
+  script.Print("#    \ \_\             \ \__\ \____/     #");
+  script.Print("#     \/_/              \/__/\/___/      #");
+  script.Print("#      (C) 2013 The XPerience Project    #");
+  script.Print("##########################################");
+  mxpato = GetBuildProp("ro.xp.mod", OPTIONS.info_dict)
+  script.Print("#   Version: %s"%(mxpato));
+  device = GetBuildProp("ro.product.device", OPTIONS.info_dict)
+  model = GetBuildProp("ro.product.model", OPTIONS.info_dict)
+  script.Print("# Device: %s (%s)"%(model, device));
+  script.Print("###############################################");
+  
 
   if "selinux_fc" in OPTIONS.info_dict:
     WritePolicyConfig(OPTIONS.info_dict["selinux_fc"], output_zip)
 
+  script.Print("Formatting /system")
   script.FormatPartition("/system")
+  script.Print("Mounting system");
   script.Mount("/system")
   #script.UnpackPackageDir("recovery", "/system")
+  script.Print(" Install system");
   script.UnpackPackageDir("system", "/system")
-
+script.Print(" Symlinks")
   symlinks = CopySystemFiles(input_zip, output_zip)
   script.MakeSymlinks(symlinks)
-
+script.Print("Flashing Kernel");
   boot_img = common.GetBootableImage("boot.img", "boot.img",
                                      OPTIONS.input_tmp, "BOOT")
   #recovery_img = common.GetBootableImage("recovery.img", "recovery.img",
@@ -445,8 +481,10 @@ def WriteFullOTAPackage(input_zip, output_zip):
 
   script.ShowProgress(0.2, 10)
   script.WriteRawImage("/boot", "boot.img")
-
+  script.Print("Finished flash kernel");
   script.ShowProgress(0.1, 0)
+    script.Print("  Builded by TEAMMEX")
+  script.Print("Enjoy MXSenorPato ROM V%s"%(mxpato));
   device_specific.FullOTA_InstallEnd()
 
   if OPTIONS.extra_script is not None:
