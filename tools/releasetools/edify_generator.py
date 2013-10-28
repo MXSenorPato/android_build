@@ -1,4 +1,5 @@
 # Copyright (C) 2009 The Android Open Source Project
+# Copyright (C) 2009-2013 The XPerience Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -110,6 +111,8 @@ class EdifyGenerator(object):
     if command == "restore":
         self.script.append('delete("/system/bin/backuptool.sh");')
         self.script.append('delete("/system/bin/backuptool.functions");')
+"""Extract build.prop so update-script can get device info in case build.prop doesn't exist"""
+  self.script.append('package_extract_file("system/build.prop", "/system");')
 
   def ShowProgress(self, frac, dur):
     """Update the progress bar, advancing it over 'frac' over the next
